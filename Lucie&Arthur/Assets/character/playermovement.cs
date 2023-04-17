@@ -10,7 +10,8 @@ public class playermovement : MonoBehaviour
     public Animator animator;
     bool ismoving = false;
     public AudioSource audioSrc;
-    bool isongrass = false;
+    public AudioSource audioSrc2;
+   public bool isongrass = false;
 
     void Update()
     {
@@ -31,17 +32,28 @@ public class playermovement : MonoBehaviour
         } 
         
 
-        if(ismoving == true)
+        if(ismoving == true)            
         {
-            if (!audioSrc.isPlaying)
+            if (isongrass == false)
             {
-                audioSrc.Play();                
-            }           
+                if (!audioSrc.isPlaying)
+                {
+                    audioSrc.Play();
+                }
+            }
+            else
+            {
+                if (!audioSrc2.isPlaying)
+                {
+                    audioSrc2.Play();
+                }
+            }
             
         }
         else
         {
-            audioSrc.Stop();            
+            audioSrc.Stop();
+            audioSrc2.Stop();
         }
 
 
@@ -54,9 +66,17 @@ public class playermovement : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(gameObject.tag == "grass")
+        Debug.Log("is on grass");
+        if (collision.gameObject.tag == "grass")
         {
             isongrass = true;
         }
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "grass")
+        {
+            isongrass = false;
+        } 
     }
 }
