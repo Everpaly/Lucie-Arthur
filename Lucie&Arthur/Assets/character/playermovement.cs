@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class playermovement : MonoBehaviour 
+public class playermovement : MonoBehaviour
 {
     public float movementspeed = 5;
     public Rigidbody2D rb;
@@ -11,7 +11,8 @@ public class playermovement : MonoBehaviour
     bool ismoving = false;
     public AudioSource audioSrc;
     public AudioSource audioSrc2;
-   public bool isongrass = false;
+    public bool isongrass = false;
+
 
     void Update()
     {
@@ -21,18 +22,49 @@ public class playermovement : MonoBehaviour
         animator.SetFloat("Horizontal", movement.x);
         animator.SetFloat("Vertical", movement.y);
         animator.SetFloat("speed", movement.sqrMagnitude);
-        
+        if (Input.GetAxisRaw("Horizontal") == 1)
+        {
+            animator.SetFloat("LastMoveHorizontal", Input.GetAxisRaw("Horizontal"));
+            animator.SetFloat("LastMoveVertical", Input.GetAxisRaw("Vertical"));
+        }
+
+        if (Input.GetAxisRaw("Horizontal") == -1)
+        {
+            animator.SetFloat("LastMoveHorizontal", Input.GetAxisRaw("Horizontal"));
+            animator.SetFloat("LastMoveVertical", Input.GetAxisRaw("Vertical"));
+        }
+
+        if (Input.GetAxisRaw("Vertical") == 1)
+        {
+            animator.SetFloat("LastMoveVertical", Input.GetAxisRaw("Vertical"));
+            animator.SetFloat("LastMoveHorizontal", Input.GetAxisRaw("Horizontal"));
+        }
+        if (Input.GetAxisRaw("Vertical") == -1)
+        {
+            animator.SetFloat("LastMoveVertical", Input.GetAxisRaw("Vertical"));
+            animator.SetFloat("LastMoveHorizontal", Input.GetAxisRaw("Horizontal"));
+        }
+
+        if (isongrass == true)
+        {
+            audioSrc.Stop();
+        }
+        if (isongrass == false)
+        {
+            audioSrc2.Stop();
+        }
+
         if (movement.sqrMagnitude >= 0.01f)
         {
-            ismoving = true; 
+            ismoving = true;
         }
         else
         {
             ismoving = false;
-        } 
-        
+        }
 
-        if(ismoving == true)            
+
+        if (ismoving == true)
         {
             if (isongrass == false)
             {
@@ -48,7 +80,7 @@ public class playermovement : MonoBehaviour
                     audioSrc2.Play();
                 }
             }
-            
+
         }
         else
         {
@@ -66,17 +98,21 @@ public class playermovement : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("is on grass");
+
         if (collision.gameObject.tag == "grass")
         {
             isongrass = true;
         }
     }
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "grass")
         {
             isongrass = false;
-        } 
+        }
     }
+
 }
+
+
+
